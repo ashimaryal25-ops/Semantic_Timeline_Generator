@@ -1,4 +1,5 @@
 # Event Timeline Extractor
+### 🚀 [Click Here to View the Live Demo](https://semantictimelinegenerator-sv7awd673uevykt7qq7m8l.streamlit.app/)
 
 A Python tool that extracts **events and dates** from text and organizes them into a **chronological timeline**. The timeline is displayed interactively using **Streamlit**.
 
