@@ -15,7 +15,7 @@ The **Semantic Timeline Generator** is an advanced NLP tool that extracts events
 ## ⚙️ Installation & Usage
 
 1. **Clone the Repo:**
-   \git clone https://github.com/ashimaryal25-ops/Semantic_Timeline_Generator.git\
+   \git clone https://github.com/ashimaryal25-ops/Semantic_Timeline_Generator.git
 
 2. **Install Dependencies:**
    \pip install -r requirements.txt\
