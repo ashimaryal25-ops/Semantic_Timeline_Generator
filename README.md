@@ -9,7 +9,6 @@ The **Semantic Timeline Generator** is an advanced NLP tool that extracts events
 * **Semantic Topic Discovery:** Uses HDBSCAN and SentenceTransformers to mathematically cluster related events into logical themes.
 * **Context-Aware Extraction:** Leverages spaCy’s Transformer models (en_core_web_trf) for high-accuracy entity and event recognition.
 * **Intelligent Date Granularity:** Automatically detects and sorts events by Year, Month, or Day.
-* **Dynamic Topic Labeling:** Generates descriptive cluster titles using a T5 summarization pipeline.
 * **Interactive Filtering:** Allows users to toggle specific topics to filter the timeline in real-time.
 * **Streamlit Visualization:** A clean, web-based interface for interactive data exploration.
 
