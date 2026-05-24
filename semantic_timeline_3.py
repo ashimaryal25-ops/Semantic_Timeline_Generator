@@ -3,15 +3,57 @@ import dateparser
 from dateparser.search import search_dates
 import streamlit as st
 from streamlit_timeline import timeline
+from pypdf import PdfReader
 import hdbscan
 from sklearn.preprocessing import normalize
 from sentence_transformers import SentenceTransformer
 from transformers import pipeline
 from collections import defaultdict
-from transformers import pipeline
+
+DEFAULT_TEXT = """The company was founded in 1998, starting with just three employees in a small office downtown.
+By June 2000, they had launched their first product, which quickly gained traction among early adopters.
+Over the next few years, the team expanded, opening a branch in New York in 2003.
+Research and development saw a major boost in 2005, leading to the release of version 2.0 in March 2006.
+Customer feedback during 2007 highlighted areas for improvement, prompting minor updates throughout that year.
+The year 2008 brought recognition in the industry, with awards for innovation in software design.
+Despite challenges in 2009, including market competition and internal restructuring, the company maintained steady growth.
+A major upgrade was rolled out on August 15, 2010, which included new features and improved security.
+By 2012, international sales had doubled, especially in Europe and Asia.
+The team celebrated its 20th anniversary in 2018, reflecting on two decades of innovation.
+In 2020, remote work became standard practice due to global events, which reshaped internal workflows.
+Recent improvements were implemented in February 2023, optimizing system performance and user experience.
+Looking ahead, plans for expansion are scheduled for 2025, aiming to enter emerging markets and develop next-generation technologies."""
+
+
+def get_input_text(uploaded_file):
+    if uploaded_file is None:
+        return DEFAULT_TEXT
+
+    file_name = uploaded_file.name.lower()
+
+    if file_name.endswith(".pdf"):
+        return extract_pdf_text(uploaded_file)
+
+    if file_name.endswith(".txt"):
+        return uploaded_file.getvalue().decode("utf-8", errors="replace")
+
+    return ""
+
+
+def extract_pdf_text(uploaded_file):
+    reader = PdfReader(uploaded_file)
+    page_text = []
+
+    for page in reader.pages:
+        text = page.extract_text() or ""
+        if text.strip():
+            page_text.append(text.strip())
+
+    return "\n\n".join(page_text)
 
 def main():
     st.set_page_config(layout="wide")
+    st.title("Semantic Timeline Generator")
     
     @st.cache_resource
     def load_nlp():
@@ -24,19 +66,22 @@ def main():
     nlp = load_nlp()
     summarizer = load_summarizer()
 
-    text = """The company was founded in 1998, starting with just three employees in a small office downtown.
-      By June 2000, they had launched their first product, which quickly gained traction among early adopters. 
-      Over the next few years, the team expanded, opening a branch in New York in 2003.
-      Research and development saw a major boost in 2005, leading to the release of version 2.0 in March 2006. 
-      Customer feedback during 2007 highlighted areas for improvement, prompting minor updates throughout that year. 
-      The year 2008 brought recognition in the industry, with awards for innovation in software design. 
-      Despite challenges in 2009, including market competition and internal restructuring, the company maintained steady growth. 
-      A major upgrade was rolled out on August 15, 2010, which included new features and improved security. 
-      By 2012, international sales had doubled, especially in Europe and Asia. 
-      The team celebrated its 20th anniversary in 2018, reflecting on two decades of innovation. 
-      In 2020, remote work became standard practice due to global events, which reshaped internal workflows. 
-      Recent improvements were implemented in February 2023, optimizing system performance and user experience. 
-      Looking ahead, plans for expansion are scheduled for 2025, aiming to enter emerging markets and develop next-generation technologies."""
+    uploaded_file = st.file_uploader(
+        "Upload a PDF or text file",
+        type=["pdf", "txt"],
+        help="PDFs must contain selectable text. Scanned image-only PDFs need OCR before upload.",
+    )
+    text = get_input_text(uploaded_file)
+
+    if uploaded_file and not text.strip():
+        st.error("No readable text was found in the uploaded file.")
+        st.stop()
+
+    text = st.text_area("Timeline source text", value=text, height=260)
+
+    if not text.strip():
+        st.warning("Enter text or upload a PDF/text file to generate a timeline.")
+        st.stop()
 
     event_list = get_event_list(text, nlp)
 
@@ -265,4 +310,3 @@ def generate_auto_topic(grouped_events, _summarizer):
 
 if __name__ == "__main__":
     main()
-    

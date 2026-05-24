@@ -7,6 +7,7 @@ The **Semantic Timeline Generator** is an advanced NLP tool that extracts events
 ## 🚀 Key Features
 
 * **Event Extraction:** Automatically finds dates and events in raw text using Transformer-based NLP (spaCy \`en_core_web_trf\`).
+* **PDF Support:** Upload a selectable-text PDF and the app extracts its text before generating topics and timeline events.
 * **Topic Grouping:** Uses **HDBSCAN clustering** to mathematically group related events into categories so you don't just have one long list.
 * **Smart Sorting:** Handles different date types (Years vs. Months vs. Days) and keeps everything in the right order.
 * **Interactive Timeline:** Generates a scrollable, clickable timeline where you can see the story of the text visually.
@@ -27,6 +28,7 @@ The **Semantic Timeline Generator** is an advanced NLP tool that extracts events
 ## 📦 Technical Stack
 
 * **NLP:** spacy (en_core_web_trf), dateparser
+* **File Parsing:** pypdf
 * **ML/Math:** hdbscan, scikit-learn, sentence-transformers
 * **Frontend:** streamlit, streamlit-timeline
 * **Engine:** torch (PyTorch)
